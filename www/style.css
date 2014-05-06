@@ -41,7 +41,10 @@ div.border{
 .btn-file, .submit-btn, .btn-success, .upload-files{
     margin-top:30px;
 }
-.container{
+#mapnik-image{
     margin-bottom:50px;
     margin-top:-20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto    
 }
