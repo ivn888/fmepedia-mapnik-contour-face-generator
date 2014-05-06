@@ -1,53 +1,69 @@
-<!-- 	Title: Using the jsessionid with the data upload service
-		Description: The jsessionid lets you explicitly specify the session ID of a request URL.
-		This specification ensures that the correct session state is preserved for a session when 
-		cookies do not work properly or are not available.
+<!--  Title: Using the jsessionid with the data upload service
+    Description: The jsessionid lets you explicitly specify the session ID of a request URL.
+    This specification ensures that the correct session state is preserved for a session when 
+    cookies do not work properly or are not available.
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-	<head>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <script src="bootstrap.min.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script> 
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <script type="text/javascript" src="index.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
-		<title>File Upload Demo</title>
-	</head>
+    <title>File Upload Demo</title>
+  </head>
 
-	<body >
-    <div class="container">
-  <div class="row">
-    <h1>Mapnik Face Contour Generator</h1>
-		<h2>Step 1: Upload Photo</h2>
-    <div class="lead">Must be a JPEG</div>
-		<form id="file_upload_form" >
-      <span class="file-input btn btn-default btn-file">
-          Browse for Photo... <input name="file" id="file" size="27" type="file" />
-      </span>
-			<br>     <br>
-			<input type="submit" class="btn btn-primary" name="action" value="Upload" />
-		</form>
-		<br/>
-    <h4>Uploaded Files</h4>
-    <div id='uploadedList'>
+  <body >
+    <div class=" img">
+      <img src="mapnik2.png "class="img-responsive">
     </div>
-    <br/>        
-		<h2>Step 2: Run Job</h2>
-		<form id="stream_face" role="form" enctype="image/jpeg" >
+    <div class="container">
+    
+      <div class="col-md-12">
+        <h1 class="text-center">Mapnik Face Contour Generator</h1>
+      </div>
+   
+      <div class="col-md-6">
+        <h2>Step 1: Upload Photo</h2>
+        <div class="lead text-muted">Must be a JPEG</div>
+        <form id="file_upload_form" >
+          <span class="file-input btn btn-default btn-file col-sm-5">
+              Browse for Photo... <input name="file" id="file" size="27" type="file" />
+          </span>
+          <span class="col-sm-6 col-sm-offset-1 submit-btn">
+          <input type="submit" class="btn btn-primary " name="action" value="Upload" />
+          </span>
+        </form>
+        
+        <div class="col-md-12">
+          <h4 class="upload-files">Uploaded Files</h4>
+          <div id='uploadedList'>
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-xs-12 hidden-md hidden-lg border">
+        
+      </div>
+      <div class="col-md-6">
+     
+      <h2>Step 2: Run Job</h2>
+      <h4>Background:</h4>
+      <form id="stream_face" role="form" enctype="image/jpeg" >
 
-        <h4>Background:</h4>
-        <select class='form-control' id='Background'>
-          <option value="Wood">Wood</option>
-          <option value="Notebook">Notebook</option>
-          <option value="Old_Paper">Old Paper</option>
-        </select>
-      <br><br>
-      <INPUT type="button" class="btn btn-success" value="Place my face on contours" onClick="fullForm.triggerRequestAsync()" />
-		</form>
+          <select class='form-control col-sm-5' id='Background'>
+            <option value="Wood">Wood</option>
+            <option value="Notebook">Notebook</option>
+            <option value="Old_Paper">Old Paper</option>
+          </select>
+        
+        <INPUT type="button" class="btn btn-success col-sm-6 col-sm-offset-1" value="Place my face on contours" onClick="fullForm.triggerRequestAsync()" />
+      </form>
+    </div>
   </div>
-</div>
-
-	</body>
+</body>
+  
 </html>
