@@ -1,200 +1,52 @@
-
-
-<!-- 	Title: Full Data Upload Example
-		Description: Shows how to upload files for use in a transformation. It is broken down into
-		three steps, uploading the file, allowinf the user to choose which file to use in the 
-		translation and running the translation with the uploaded file.
+<!-- 	Title: Using the jsessionid with the data upload service
+		Description: The jsessionid lets you explicitly specify the session ID of a request URL.
+		This specification ensures that the correct session state is preserved for a session when 
+		cookies do not work properly or are not available.
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script> 
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<title>Contour Face</title>
-		<script>
-			/**
-			 * Called when the page first loads
-			 */
-			function init() {
-				var iframeId = document.getElementById('upload_target');
-				
-				//Listener to catch the file upload submit
-				document.getElementById('file_upload_form').onsubmit = function() {
-					document.getElementById('file_upload_form').target = 'upload_target';
-				}
-				
-				//Called when the iframe finished loading (i.e when the files have finished uploading)
-				var eventHandler = function() {
-
-					if(iframeId.detachEvent)
-						iframeId.detachEvent("onload", eventHandler);
-					else
-						iframeId.removeEventListener("load", eventHandler, false);
-					
-					//Now the files have been uploaded we need to allow the user to select the
-					//file they wish to use in the translation
-					retrieveUploadedFiles();
-
-				}
-				
-				
-				if(iframeId.addEventListener)
-					iframeId.addEventListener("load", eventHandler, true);
-				if(iframeId.attachEvent)
-					iframeId.attachEvent("onload", eventHandler);
-
-			}
-
-			/*
-			 Commonly available on the web, this function was taken from:
-			 http://ajaxpatterns.org/XMLHttpRequest_Call
-			 */
-			function createXMLHttpRequest() {
-				try {
-					return new XMLHttpRequest();
-				} catch (e) {
-				}
-				try {
-					return new ActiveXObject("Msxml2.XMLHTTP");
-				} catch (e) {
-				}
-				alert("XMLHttpRequest not supported");
-				return null;
-			}
-			
-			/**
-			 * Called once the user has finished uploading a file. Makes a request to
-			 * the data upload service using a GET request.
-			 */
-			function retrieveUploadedFiles() {
-
-				/*
-				 Display the result when complete
-				 */
-				function onResponse() {
-					// 4 indicates a result is ready
-					if(xhReq.readyState != 4)
-						return;
-					//Decode the JSON
-					var jsonReturn = eval(eval("(" + xhReq.responseText + ")"));
-					var filesReturned = jsonReturn.serviceResponse.files.file;
-					
-					//Obtain the container we will append to and clear it
-					var container = document.getElementById('retrievedFiles');
-					container.innerHTML = "";
-					
-					//Create the checkboxes
-					var _select = document.createElement('select');
-					for( j = 0; j < filesReturned.length; j++) {
-						var _input = document.createElement('input');
-						_input.type = 'checkbox';
-						_input.value = filesReturned[j].path;
-						container.appendChild(_input);
-						var _text = document.createTextNode(filesReturned[j].name);
-						var p = document.createElement("element");
-						p.appendChild(_text);
-						var br = document.createElement("br");
-						p.appendChild(br);
-						container.appendChild(p);
-					}
-
-					return;
-				}
-
-				/*
-				 Create the XMLHttpRequest object
-				 */
-				var xhReq = createXMLHttpRequest();
-				// Request Variables
-				pUrlBase = "https://face-dmitri-bagh.fmecloud.com/fmedataupload/ContourFace/FaceOfCo.fmw?opt_extractarchive=true&opt_pathlevel=5&opt_fullpath=true"
-				pHttpMethod = "POST"
-
-				xhReq.open(pHttpMethod, pUrlBase, true);
-				xhReq.onreadystatechange = onResponse;
-				xhReq.send(null);
-			}
-			
-			/**
-			 * Called when the user clicks on the run worksapce button. Submits
-			 * a job to FME Server using the files the user has selected
-			 */
-			function triggerRequestAsyncSync() {
-
-				/*
-				 Display the result when complete
-				 */
-				function onResponse() {
-					// 4 indicates a result is ready
-					if(xhReq.readyState != 4)
-						return;
-					// Get the response and display it
-					return;
-				}
-
-				//See which comboboxes are checked next to the file
-				var checkItems = document.getElementById('retrievedFiles').children;
-
-				//Generate a string which contains the files we have uploaded
-				var arrayFilesUploaded = [];				
-				for( j = 0; j < checkItems.length; j++) {
-
-					if(checkItems[j].checked) {
-						arrayFilesUploaded.push(checkItems[j].value);
-					}
-				}
-
-				var strFilesUpload = '';				
-				if(arrayFilesUploaded.length === 0) {
-					strFilesUpload = arrayFilesUploaded[0];
-				} else {
-					for( j = 0; j < arrayFilesUploaded.length; j++) {
-						strFilesUpload = strFilesUpload + '"' + arrayFilesUploaded[j] + '" ';
-					}
-					strFilesUpload = '"'+ strFilesUpload + '"';
-				}
-
-				/*
-				 Create the XMLHttpRequest object and run the workspace
-				 */
-				var xhReq = createXMLHttpRequest();
-				// Request Variables
-				pUrlBase = "https://face-dmitri-bagh.fmecloud.com/fmedatastreaming/ContourFace/FaceOfCo.fmw"
-          	   pRestCall = pUrlBase + "?SourceDataset_JPEG=" + strFilesUpload + "&BACKGROUND_IMAGE=$(FME_SHAREDRESOURCE_DATA)/backgrounds/" +  document.getElementById("Background").value + ".jpg";
-               window.open(pRestCall, "_self")
-			}
-
-
-			window.onload = init;
-
- 
-            
-		</script>
+    <script type="text/javascript" src="index.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+		<title>File Upload Demo</title>
 	</head>
-	<body>
-		<h2>Step 1: Upload Files</h2>
-		<form id="file_upload_form" method="post" enctype="multipart/form-data" action="https://face-dmitri-bagh.fmecloud.com/fmedataupload/ContourFace/FaceOfCo.fmw?opt_extractarchive=true&opt_pathlevel=3&opt_fullpath=true">
-			<input name="file" id="file" size="27" type="file" />
-			<br />
-			<input type="submit" name="action" value="Upload" />
-			<iframe id="upload_target" name="upload_target" src="" style="width:0;height:0;border:0px solid #fff;"></iframe>
+
+	<body >
+    <div class="container">
+  <div class="row">
+    <h1>Mapnik Face Contour Generator</h1>
+		<h2>Step 1: Upload Photo</h2>
+    <div class="lead">Must be a JPEG</div>
+		<form id="file_upload_form" >
+      <span class="file-input btn btn-default btn-file">
+          Browse for Photo... <input name="file" id="file" size="27" type="file" />
+      </span>
+			<br>     <br>
+			<input type="submit" class="btn btn-primary" name="action" value="Upload" />
 		</form>
+		<br/>
+		<h2>Step 2: Run Job</h2>
+		<h4>Uploaded Files</h4>
+    <div id='uploadedList'>
+		</div>
+		<form id="stream_face" role="form" enctype="image/jpeg" >
 
-
-
-        
-		<h2>Step 2: Select Files to Run</h2>
-		<div id="retrievedFiles">No Files have been uploaded yet</div>
-        
-		<h2>Step 3: Submit Job</h2>
-		<form id="stream_face" enctype="image/jpeg" >
-                        Background
-                        <select class='select' id='Background'>
-                          <option value="Wood">Wood</option>
-                          <option value="Notebook">Notebook</option>
-                          <option value="Old_Paper">Old Paper</option>
-                        </select>
-  
-            <INPUT type="button" value="Place my face on contours" onClick="triggerRequestAsyncSync()" />
+        <h4>Background:</h4>
+        <select class='form-control' id='Background'>
+          <option value="Wood">Wood</option>
+          <option value="Notebook">Notebook</option>
+          <option value="Old_Paper">Old Paper</option>
+        </select>
+      <br><br>
+      <INPUT type="button" class="btn btn-success" value="Place my face on contours" onClick="fullForm.triggerRequestAsync()" />
 		</form>
+  </div>
+</div>
+
 	</body>
 </html>
-
