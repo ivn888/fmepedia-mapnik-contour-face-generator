@@ -62,7 +62,6 @@ var fullForm = {
         elemName = elemName.split(' ').join('');
 
         fullForm.sessionID = data.jqXHR.responseJSON.serviceResponse.session;
-        fullForm.arrayFiles = data.result.serviceResponse.files.file;
         var test = 'stop';
 
         var button = $("<div class='fileBtn'/>");
@@ -194,11 +193,11 @@ submit : function() {
 
 
         //submit to server
-        var filePath = '';
+        var filePath = '$(FME_DATA_REPOSITORY)/Mapnik/FacetoContour.fmw/';
 
         for (var i = 0; i < fileList.length; i++){
           if (fileList[i].lastChild.textContent == 'Selected'){
-            filePath = fullForm.arrayFiles[i].path;
+            filePath = filePath + fullForm.sessionID + '/' + fileList[i].firstChild.textContent;
           }
         }
 
