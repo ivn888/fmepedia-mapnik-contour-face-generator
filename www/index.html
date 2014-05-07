@@ -6,13 +6,22 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+    <script src="libs/jquery-1.10.1.js"></script>
     <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="libs/bootstrap/js/bootstrap.min.js"></script>
-    <script src="http://malsup.github.com/jquery.form.js"></script> 
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     
-
+    <!-- Upload Library -->
+    <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+    <script src="libs/upload/js/vendor/jquery.ui.widget.js"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="libs/upload/js/jquery.iframe-transport.js"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="libs/upload/js/jquery.fileupload.js"></script>
+    <!-- The File Upload UI plugin -->
+    <link rel="stylesheet" href="libs/upload/css/jquery.fileupload-ui.css">
+    
     <!-- Generic -->
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="header.css">
@@ -59,19 +68,20 @@
       <div class="col-md-6">
         <h2>Step 1: Upload Photo</h2>
         <div class="lead text-muted">Must be a JPEG</div>
-        <form id="file_upload_form" >
-          <span class="file-input btn btn-default btn-file col-sm-5">
-              Browse for Photo... <input name="file" id="file" size="27" type="file" />
+
+        <div id='dropzone' class='fade well well-large'>
+          <!-- The container for the uploaded files -->
+          <div id='fileTable' style='display:none'></div>
+
+
+          <p id='dropText'>Drop your files here</p>
+          <br/>
+          <span class="btn btn-success fileinput-button">
+            <i class="icon-plus icon-white"></i>
+            <span>Add files...</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload" type="file" name="files[]" multiple>
           </span>
-          <span class="col-sm-6 col-sm-offset-1 submit-btn">
-          <input type="submit" class="btn btn-primary " name="action" value="Upload" />
-          </span>
-        </form>
-        
-        <div class="col-md-12">
-          <h4 class="upload-files">Uploaded Files</h4>
-          <div id='uploadedList'>
-          </div>
         </div>
       </div>
     
@@ -90,7 +100,7 @@
             <option value="Old_Paper">Old Paper</option>
           </select>
         
-        <INPUT type="button" class="btn btn-success col-sm-6 col-sm-offset-1" value="Place my face on contours" onClick="fullForm.triggerRequestAsync()" />
+        <INPUT type="button" class="btn btn-success col-sm-6 col-sm-offset-1" value="Place my face on contours" onClick="fullForm.submit()" />
       </form>
     </div>
   </div>
