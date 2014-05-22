@@ -2,27 +2,41 @@ var uploadedPhotoPath;
 
 $(document).ready(function(){
 
-  fullForm.init();
+  var fmes = new FMEServer({
+    server : fullForm.host,
+    token : fullForm.token
+  });
+  
+  //Call server and get the session ID and path
+  fmes.getSession(fullForm.repository, fullForm.workspace, function(json){
+    fullForm.session = json.serviceResponse.session;
+    fullForm.path = json.serviceResponse.files.folder[0].path;
+
+    //Build up the form
+    fullForm.init();
+  });
 
 });
 
 
 var fullForm = {
-  sessionID : '',
+  host : 'https://mapnik-demo-safe-software.fmecloud.com',
+  token : 'cf4520a87ea2408ab561252e023aa1a9ba3c46ac',
+  repository : 'Mapnik',
+  workspace : 'FacetoContour.fmw',
+  multipleFilesUploaded: false,
+  session : null,
+  path : null,
   arrayFiles: '',
   uploadedFileList : null,
-  url : 'mapnik-demo-safe-software.fmecloud.com',
-  multipleFilesUplaoded: false,
 
   init : function(){
-    this.sessionID = this.getSessionID();
-    
     //--------------------------------------------------------------
     //Initialize the drag and drop file upload area
     //--------------------------------------------------------------
     //control behaviour of the fileuploader
     $('#fileupload').fileupload({
-      url: 'https://' + this.url + '/fmedataupload/Mapnik/FacetoContour.fmw;jsessionid=' + this.sessionID + '?opt_fullpath=true',
+      url: fullForm.host + '/fmedataupload/' + fullForm.repository + '/' +  fullForm.workspace + ';jsessionid=' + fullForm.session,
       dropzone: $('#dropzone'),
       autoUpload: true,
 
@@ -61,7 +75,6 @@ var fullForm = {
         elemName = elemName.replace(/[.\(\)]/g, '');
         elemName = elemName.split(' ').join('');
 
-        fullForm.sessionID = data.jqXHR.responseJSON.serviceResponse.session;
         var test = 'stop';
 
         var button = $("<div class='fileBtn'/>");
@@ -131,20 +144,6 @@ var fullForm = {
     });
   },
 
-  getSessionID : function(){
-    var id = null;
-    $.ajax({
-      url : 'https://' + this.url + '/fmedataupload/Mapnik/FacetoContour.fmw',
-      async : false,
-      type : 'POST',
-      dataType : 'json',
-      success : function(response){
-        id = response.serviceResponse.session;
-      }
-    });
-    return id;
-  },
-
   updateList : function(fileList){
     //We are just going to process the last file they uploaded.
     //If we only have one result just return text
@@ -163,7 +162,7 @@ var fullForm = {
         '</div>';
       }
       $('#uploadedList').html(radios);
-      this.multipleFilesUplaoded = true;
+      fullForm.multipleFilesUploaded = true;
     }
   },
 
@@ -190,19 +189,18 @@ submit : function() {
         $('#dropzone').prepend('<div class="alert alert-error"> Please select a photo.<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
       }
       else{
-
-
-        //submit to server
-        var filePath = '$(FME_DATA_REPOSITORY)/Mapnik/FacetoContour.fmw/';
-
+        
+        //submit file to server
         for (var i = 0; i < fileList.length; i++){
           if (fileList[i].lastChild.textContent == 'Selected'){
-            filePath = filePath + fullForm.sessionID + '/' + fileList[i].firstChild.textContent;
+            files = files + '"' + fullForm.path + '/' + fileList[i].firstChild.textContent + '"';
           }
         }
 
-        pUrlBase = 'https://' + this.url + '/fmedatastreaming/Mapnik/FacetoContour.fmw';
-        pRestCall = pUrlBase + "?SourceDataset_JPEG=" + filePath + "&BACKGROUND_IMAGE=$(FME_SHAREDRESOURCE_TEMP)/backgrounds/" +  document.getElementById("Background").value + ".jpg";
+        files = files + '"';
+
+        pUrlBase = fullForm.host + '/fmedatastreaming/' + fullForm.repository + '/' + fullForm.workspace;
+        pRestCall = pUrlBase + "?SourceDataset_JPEG=" + files + "&BACKGROUND_IMAGE=$(FME_SHAREDRESOURCE_TEMP)/backgrounds/" + document.getElementById("Background").value + ".jpg";
         window.open(pRestCall, "_self");
 
       }
@@ -210,10 +208,16 @@ submit : function() {
   },
 
   toggleSelection : function(e){
-    var test = e;
-    var blah = '';
+    
+    $('#fileTable').children('.fileRow').each(function(){
+      var btn = $(this).children('.fileBtn').children('button:first-child');
+      if($(btn) != $(e)){
+        $(btn).text('Select this File');
+        $(btn).removeClass('btn-success');
+      }
+    });
 
-    if (e.textContent == 'Select this File'){
+    if(e.textContent == 'Select this File'){
       e.textContent = 'Selected';
       e.className = 'btn btn-success';
     }
