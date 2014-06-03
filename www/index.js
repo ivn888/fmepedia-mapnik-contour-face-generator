@@ -21,7 +21,7 @@ $(document).ready(function(){
 
 var fullForm = {
   host : 'https://mapnik-demo-safe-software.fmecloud.com',
-  token : 'cf4520a87ea2408ab561252e023aa1a9ba3c46ac',
+  token : '217d8de012581ade6b087f97babe692b7f870cc9',
   repository : 'Mapnik',
   workspace : 'FacetoContour.fmw',
   multipleFilesUploaded: false,
