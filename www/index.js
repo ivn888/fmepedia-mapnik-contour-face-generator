@@ -2,13 +2,13 @@ var uploadedPhotoPath;
 
 $(document).ready(function(){
 
-  var fmes = new FMEServer({
+  FMEServer.init({
     server : fullForm.host,
     token : fullForm.token
   });
   
   //Call server and get the session ID and path
-  fmes.getSession(fullForm.repository, fullForm.workspace, function(json){
+  FMEServer.getSession(fullForm.repository, fullForm.workspace, function(json){
     fullForm.session = json.serviceResponse.session;
     fullForm.path = json.serviceResponse.files.folder[0].path;
 
