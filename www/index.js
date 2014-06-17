@@ -20,9 +20,9 @@ $(document).ready(function(){
 
 
 var fullForm = {
-  host : 'https://mapnik-demo-safe-software.fmecloud.com',
-  token : '217d8de012581ade6b087f97babe692b7f870cc9',
-  repository : 'Mapnik',
+  host : 'https://fmepedia2014-safe-software.fmecloud.com',
+  token : '8be243c0fc2f5f34977050bdab57ebbdd3e72aa2',
+  repository : 'Mapnik_Webinar',
   workspace : 'FacetoContour.fmw',
   multipleFilesUploaded: false,
   session : null,
