@@ -1,27 +1,27 @@
 var uploadedPhotoPath;
 
 $(document).ready(function(){
+  $.getJSON("http://demos.fmeserver.com.s3.amazonaws.com/server-demo-config.json", function(config) {
+    fullForm.host = config.initObject.server;
+    fullForm.token = config.initObject.token;
+    
+    FMEServer.init(config.initObject);
+      //Call server and get the session ID and path
+    FMEServer.getSession(fullForm.repository, fullForm.workspace, function(json){
+      fullForm.session = json.serviceResponse.session;
+      fullForm.path = json.serviceResponse.files.folder[0].path;
 
-  FMEServer.init({
-    server : fullForm.host,
-    token : fullForm.token
+      //Build up the form
+      fullForm.init();
+    });
   });
   
-  //Call server and get the session ID and path
-  FMEServer.getSession(fullForm.repository, fullForm.workspace, function(json){
-    fullForm.session = json.serviceResponse.session;
-    fullForm.path = json.serviceResponse.files.folder[0].path;
 
-    //Build up the form
-    fullForm.init();
-  });
 
 });
 
 
 var fullForm = {
-  host : 'https://fmepedia2014-safe-software.fmecloud.com',
-  token : '8be243c0fc2f5f34977050bdab57ebbdd3e72aa2',
   repository : 'Mapnik_Webinar',
   workspace : 'FacetoContour.fmw',
   multipleFilesUploaded: false,
